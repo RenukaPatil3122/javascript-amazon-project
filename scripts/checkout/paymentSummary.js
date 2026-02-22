@@ -9,9 +9,19 @@ export function renderPaymentSummary() {
 
   cart.forEach((cartItem) => {
     const product = getProduct(cartItem.productId);
+    if (!product) {
+      console.log("Product not found:", cartItem.productId);
+      return;
+    }
+
     productPriceCents += product.priceCents * cartItem.quantity;
 
     const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
+    if (!deliveryOption) {
+      console.log("Delivery option not found:", cartItem.deliveryOptionId);
+      return;
+    }
+
     shippingPriceCents += deliveryOption.priceCents;
   });
 

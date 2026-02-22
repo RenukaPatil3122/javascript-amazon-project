@@ -17,9 +17,19 @@ export function renderOrderSummary() {
 
     const matchingProduct = getProduct(productId);
 
+    if (!matchingProduct) {
+      console.log("Product not found:", productId);
+      return;
+    }
+
     const deliveryOptionId = cartItem.deliveryOptionId;
 
     const deliveryOption = getDeliveryOption(deliveryOptionId);
+
+    if (!deliveryOption) {
+      console.log("Delivery option not found:", deliveryOptionId);
+      return;
+    }
 
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
@@ -41,7 +51,7 @@ export function renderOrderSummary() {
           <div class="product-name">
               ${matchingProduct.name}
           </div>
-          <div class="product-price">$${formatCurrency(matchingProduct.priceCents)}</div>
+          <div class="product-price">${matchingProduct.getPrice()}</div>
           <div class="product-quantity js-product-quantity-${matchingProduct.id}">
               <span> Quantity: <span class="quantity-label">${cartItem.quantity}</span> </span>
               <span class="update-quantity-link link-primary">
@@ -106,8 +116,9 @@ export function renderOrderSummary() {
       const productId = link.dataset.productId;
       removeFromCart(productId);
 
-      const container = document.querySelector(`
-      .js-cart-item-container-${productId}`);
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`,
+      );
 
       container.remove(); //to remove from page
 
